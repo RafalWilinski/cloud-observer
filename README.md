@@ -37,3 +37,12 @@ Each entry inside main array translates to separate SNS topic subscribed to even
 ```
 
 As this software is in heavy development stage, configuration structure is very likely to change.
+
+### Events to be handled
+- [x] ECS Task State Change
+- [ ] ECS Container Instance State Change
+
+
+### Functionality
+- [ ] Filtering sources by ARN, region, etc.
+- [ ] More friendly config file. YAML? TS?
