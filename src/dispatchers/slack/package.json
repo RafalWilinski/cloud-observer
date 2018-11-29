@@ -1,0 +1,15 @@
+{
+  "name": "cloud-observer-slack-dispatcher",
+  "version": "0.0.1",
+  "main": "function.js",
+  "author": "Rafal Wilinski",
+  "license": "MIT",
+  "dependencies": {
+    "aws-lambda": "^0.1.2",
+    "got": "^9.3.2"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.15",
+    "@types/got": "^9.2.1"
+  }
+}

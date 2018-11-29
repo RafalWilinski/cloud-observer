@@ -17,8 +17,10 @@
         "aws-cdk": "^0.18.1"
     },
     "dependencies": {
+        "@aws-cdk/aws-lambda-event-sources": "^0.18.1",
         "@aws-cdk/aws-sns": "^0.18.1",
         "@aws-cdk/aws-sqs": "^0.18.1",
-        "@aws-cdk/cdk": "^0.18.1"
+        "@aws-cdk/cdk": "^0.18.1",
+        "aws-lambda": "^0.1.2"
     }
 }
