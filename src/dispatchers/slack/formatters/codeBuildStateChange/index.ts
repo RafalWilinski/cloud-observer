@@ -1,3 +1,5 @@
+import { CloudWatchLogs } from 'aws-sdk';
+
 const computeColor = (buildStatus: string) => {
   switch (buildStatus) {
     case 'SUCCEEDED':
@@ -7,10 +9,20 @@ const computeColor = (buildStatus: string) => {
   }
 };
 
-export const codeBuildStateChange = (data: any) => ({
+const getLogs = (data: any) => {
+  const cloudwatchlogs = new CloudWatchLogs();
+  const params = {
+    logGroupName: data.detail['additional-information'].logs['group-name'],
+    logStreamName: data.detail['additional-information'].logs['stream-name'],
+  };
+
+  return `\n\`\`\`\n${cloudwatchlogs.getLogEvents(params).promise()}\n\`\`\``;
+};
+
+export const codeBuildStateChange = async (data: any) => ({
   description: `Project ${data.detail['project-name']} *${
     data.detail['build-status']
-  }*`,
+  }*.${await getLogs(data)}`,
   fields: [
     {
       title: 'Build ID',

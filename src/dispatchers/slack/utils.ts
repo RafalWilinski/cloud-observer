@@ -19,7 +19,9 @@ export const formatSlackMessage = ({
     ],
   });
 
-export const prepareNotificationData = (data: any): NotificationData => {
+export const prepareNotificationData = async (
+  data: any,
+): Promise<NotificationData> => {
   const sharedNotificationData: NotificationData = {
     text: String(data['detail-type']),
     color: '#DD0000',
@@ -29,12 +31,12 @@ export const prepareNotificationData = (data: any): NotificationData => {
     case 'ECS Task State Change':
       return {
         ...sharedNotificationData,
-        ...formatters.ecsTaskStateChange(data),
+        ...(await formatters.ecsTaskStateChange(data)),
       };
     case 'CodeBuild Build State Change':
       return {
         ...sharedNotificationData,
-        ...formatters.codeBuildStateChange(data),
+        ...(await formatters.codeBuildStateChange(data)),
       };
     case 'CodeDeploy Deployment State-change Notification':
       return {

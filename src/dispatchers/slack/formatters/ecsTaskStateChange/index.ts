@@ -1,3 +1,5 @@
+import { CloudWatchLogs } from 'aws-sdk';
+
 const computeColor = (lastStatus: string) => {
   switch (lastStatus) {
     case 'RUNNING':
@@ -9,10 +11,20 @@ const computeColor = (lastStatus: string) => {
   }
 };
 
-export const ecsTaskStateChange = (data: any) => ({
+const getLogs = data => {
+  const cloudwatchlogs = new CloudWatchLogs();
+  const params = {
+    logGroupName: 'STRING_VALUE',
+    logStreamName: 'STRING_VALUE',
+  };
+
+  return `\n\`\`\`\n${cloudwatchlogs.getLogEvents(params).promise()}\n\`\`\``;
+};
+
+export const ecsTaskStateChange = async (data: any) => ({
   description: `${data.detail.taskArn} transitioning from *${
     data.detail.lastStatus
-  }* to *${data.detail.desiredStatus}* status`,
+  }* to *${data.detail.desiredStatus}* status.${await getLogs(data)}`,
   fields: [
     {
       title: 'Cluster',
