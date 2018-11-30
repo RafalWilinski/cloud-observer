@@ -31,10 +31,15 @@ export const prepareNotificationData = (data: any): NotificationData => {
         ...sharedNotificationData,
         ...formatters.ecsTaskStateChange(data),
       };
-    case 'ECS Task State Change':
+    case 'CodeBuild Build State Change':
       return {
         ...sharedNotificationData,
         ...formatters.codeBuildStateChange(data),
+      };
+    case 'CodeDeploy Deployment State-change Notification':
+      return {
+        ...sharedNotificationData,
+        ...formatters.codeDeployDeploymentStateChange(data),
       };
   }
 

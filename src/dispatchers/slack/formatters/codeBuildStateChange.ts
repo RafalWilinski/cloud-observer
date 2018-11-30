@@ -1,9 +1,7 @@
 const computeColor = (buildStatus: string) => {
   switch (buildStatus) {
-    case 'RUNNING':
+    case 'SUCCEEDED':
       return '#00DD00';
-    case 'PENDING':
-      return '#FFD300';
     default:
       return '#EE0000';
   }

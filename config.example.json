@@ -2,7 +2,13 @@
   {
     "sources": [
       {
-        "type": "ecsTaskStateChange"
+        "type": "ECS Task State Change"
+      },
+      {
+        "type": "CodeBuild Build State Change"
+      },
+      {
+        "type": "CodeDeploy Deployment State-change Notification"
       }
     ],
     "destinations": [

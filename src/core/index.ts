@@ -9,8 +9,9 @@ import { Code, Runtime } from '@aws-cdk/aws-lambda';
 import { SnsEventSource } from '@aws-cdk/aws-lambda-event-sources';
 
 enum SourceType {
-  ECSTaskStateChange = 'ecsTaskStateChange',
-  CodeBuildStateChange = 'codeBuildStateChange',
+  ECSTaskStateChange = 'ECS Task State Change',
+  CodeBuildStateChange = 'CodeBuild Build State Change',
+  CodeDeployDeploymentStateChangeNotification = 'CodeDeploy Deployment State-change Notification',
 }
 
 interface Source {
@@ -49,18 +50,31 @@ class CloudObserverStackCore extends cdk.Stack {
           ruleName: 'ecs-task-state-change',
           eventPattern: {
             source: ['aws.ecs'],
-            detailType: ['ECS Task State Change'],
+            detailType: [source.type],
           },
         });
       case SourceType.CodeBuildStateChange:
-        return new events.EventRule(this, 'ecs-task-state-change', {
-          description: 'Runs on CodeBuild Build State Change',
+        return new events.EventRule(this, 'codebuild-task-state-change', {
+          description: 'Runs on CodeBuild Task State Change',
           ruleName: 'codebuild-state-change',
           eventPattern: {
             source: ['aws.codebuild'],
-            detailType: ['CodeBuild Build State Change'],
+            detailType: [source.type],
           },
         });
+      case SourceType.CodeDeployDeploymentStateChangeNotification:
+        return new events.EventRule(
+          this,
+          'codedeploy-deployment-state-change',
+          {
+            description: 'Runs on CodeDeploy Deployment State Change',
+            ruleName: 'codedeploy-deployment-state-change',
+            eventPattern: {
+              source: ['aws.codebuild'],
+              detailType: [source.type],
+            },
+          },
+        );
     }
   };
 
