@@ -8,7 +8,7 @@ export const handler = async (data: any) => {
     throw new Error('WEBHOOK_URL is not defined!');
   }
 
-  let notificationData: NotificationData = prepareNotificationData(data);
+  let notificationData: NotificationData = await prepareNotificationData(data);
 
   await got.post(process.env.WEBHOOK_URL, {
     body: formatSlackMessage(notificationData),

@@ -19,7 +19,7 @@ export const codeDeployDeploymentStateChange = (data: any) => ({
     {
       title: 'Instance Group ID',
       value: data.detail.instanceGroupId,
-    }
+    },
     {
       title: 'Region',
       value: data.region,

@@ -11,7 +11,8 @@ const computeColor = (lastStatus: string) => {
   }
 };
 
-const getLogs = data => {
+const getLogs = (data: any) => {
+  console.log(data);
   const cloudwatchlogs = new CloudWatchLogs();
   const params = {
     logGroupName: 'STRING_VALUE',
