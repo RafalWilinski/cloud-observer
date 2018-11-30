@@ -2,6 +2,7 @@
 
 import * as path from 'path';
 import cdk = require('@aws-cdk/cdk');
+import iam = require('@aws-cdk/aws-iam');
 import events = require('@aws-cdk/aws-events');
 import lambda = require('@aws-cdk/aws-lambda');
 import { Topic } from '@aws-cdk/aws-sns';
@@ -79,29 +80,37 @@ class CloudObserverStackCore extends cdk.Stack {
   };
 
   processDestination = (destination: Destination) => {
-    switch (destination.type) {
-      case DestinationType.Slack:
-        return new lambda.Function(this, destination.type, {
-          code: Code.asset(path.join(__dirname, '..', 'dispatchers', 'slack')),
-          description:
-            'CloudObserver Lambda function dispatching Slack messages',
-          handler: 'function.handler',
-          runtime: Runtime.NodeJS810,
-          environment: {
-            WEBHOOK_URL: destination.endpoint,
-          },
-        });
-      case DestinationType.Email:
-        return new lambda.Function(this, destination.type, {
-          code: Code.asset(path.join(__dirname, '..', 'dispatchers', 'email')),
-          description: 'CloudObserver Lambda function dispatching Emails',
-          handler: 'function.handler',
-          runtime: Runtime.NodeJS810,
-          environment: {
-            EMAIL: destination.endpoint,
-          },
-        });
-    }
+    const role = new iam.Role(
+      this,
+      `CloudObserver-${destination.type}-dispatcher-role`,
+      {
+        assumedBy: new iam.ServicePrincipal('lambda.amazonaws.com'),
+      },
+    );
+
+    role.addToPolicy(
+      new iam.PolicyStatement()
+        .addAllResources()
+        .addAction('logs:GetLogEvents')
+        .addAction('logs:DescribeLogStreams')
+        .addAction('logs:DescribeLogGroups'),
+    );
+
+    return new lambda.Function(this, destination.type, {
+      code: Code.asset(
+        path.join(__dirname, '..', 'dispatchers', destination.type),
+      ),
+      description: `CloudObserver Lambda function dispatching ${
+        destination.type
+      } messages`,
+      handler: 'function.handler',
+      runtime: Runtime.NodeJS810,
+      environment: {
+        WEBHOOK_URL: destination.endpoint,
+        EMAIL: destination.endpoint,
+      },
+      role,
+    });
   };
 
   processSubscription = (subscription: Subscription) => {
