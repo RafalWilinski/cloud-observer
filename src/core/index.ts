@@ -10,6 +10,7 @@ import { SnsEventSource } from '@aws-cdk/aws-lambda-event-sources';
 
 enum SourceType {
   ECSTaskStateChange = 'ecsTaskStateChange',
+  CodeBuildStateChange = 'codeBuildStateChange',
 }
 
 interface Source {
@@ -49,6 +50,15 @@ class CloudObserverStackCore extends cdk.Stack {
           eventPattern: {
             source: ['aws.ecs'],
             detailType: ['ECS Task State Change'],
+          },
+        });
+      case SourceType.CodeBuildStateChange:
+        return new events.EventRule(this, 'ecs-task-state-change', {
+          description: 'Runs on CodeBuild Build State Change',
+          ruleName: 'codebuild-state-change',
+          eventPattern: {
+            source: ['aws.codebuild'],
+            detailType: ['CodeBuild Build State Change'],
           },
         });
     }

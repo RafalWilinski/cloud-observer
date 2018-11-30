@@ -8,6 +8,7 @@ const computeColor = (lastStatus: string) => {
       return '#EE0000';
   }
 };
+
 export const ecsTaskStateChange = (data: any) => ({
   description: `${data.detail.taskArn} transitioning from *${
     data.detail.lastStatus

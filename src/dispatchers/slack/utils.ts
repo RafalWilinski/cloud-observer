@@ -19,17 +19,22 @@ export const formatSlackMessage = ({
     ],
   });
 
-export const prepareNotificationData = (jsonBody: any): NotificationData => {
+export const prepareNotificationData = (data: any): NotificationData => {
   const sharedNotificationData: NotificationData = {
-    text: String(jsonBody['detail-type']),
+    text: String(data['detail-type']),
     color: '#DD0000',
   };
 
-  switch (jsonBody['detail-type']) {
+  switch (data['detail-type']) {
     case 'ECS Task State Change':
       return {
         ...sharedNotificationData,
-        ...formatters.ecsTaskStateChange(jsonBody),
+        ...formatters.ecsTaskStateChange(data),
+      };
+    case 'ECS Task State Change':
+      return {
+        ...sharedNotificationData,
+        ...formatters.codeBuildStateChange(data),
       };
   }
 
