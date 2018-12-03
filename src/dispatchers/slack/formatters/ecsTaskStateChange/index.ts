@@ -12,15 +12,17 @@ const computeColor = (lastStatus: string) => {
 };
 
 const getLogs = async (data: any) => {
-  console.log(data);
+  console.log(JSON.stringify(data));
   const cloudwatchlogs = new CloudWatchLogs();
   const params = {
-    logGroupName: 'STRING_VALUE',
-    logStreamName: 'STRING_VALUE',
+    logGroupName: data.detail['additional-information'].logs['group-name'],
+    logStreamName: data.detail['additional-information'].logs['stream-name'],
   };
   const logs = await cloudwatchlogs.getLogEvents(params).promise();
 
-  return `\n\`\`\`\n${logs}\n\`\`\``;
+  return `\n\`\`\`\n${(logs.events || []).map(
+    e => `${e.timestamp} - ${e.message}`,
+  )}\n\`\`\``;
 };
 
 export const ecsTaskStateChange = async (data: any) => ({

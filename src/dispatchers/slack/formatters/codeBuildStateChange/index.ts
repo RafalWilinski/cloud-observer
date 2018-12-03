@@ -17,7 +17,9 @@ const getLogs = async (data: any) => {
   };
   const logs = await cloudwatchlogs.getLogEvents(params).promise();
 
-  return `\n\`\`\`\n${logs}\n\`\`\``;
+  return `\n\`\`\`\n${(logs.events || []).map(
+    e => `${e.timestamp} - ${e.message}`,
+  )}\n\`\`\``;
 };
 
 export const codeBuildStateChange = async (data: any) => ({
