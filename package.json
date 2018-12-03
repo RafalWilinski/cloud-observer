@@ -1,27 +1,39 @@
 {
-    "name": "cloud-observer",
-    "version": "0.1.0",
-    "main": "bin/index.js",
-    "types": "bin/index.d.ts",
-    "bin": {
-        "cloud-observer": "bin/cloud-observer.js"
-    },
-    "scripts": {
-        "build": "tsc",
-        "watch": "tsc -w",
-        "cdk": "cdk"
-    },
-    "devDependencies": {
-        "@types/node": "^8.9.4",
-        "typescript": "^3.1.2",
-        "aws-cdk": "^0.18.1"
-    },
-    "dependencies": {
-        "@aws-cdk/aws-iam": "^0.18.1",
-        "@aws-cdk/aws-lambda-event-sources": "^0.18.1",
-        "@aws-cdk/aws-sns": "^0.18.1",
-        "@aws-cdk/aws-sqs": "^0.18.1",
-        "@aws-cdk/cdk": "^0.18.1",
-        "aws-lambda": "^0.1.2"
-    }
+  "name": "cloud-observer",
+  "version": "0.1.0",
+  "main": "bin/index.js",
+  "types": "bin/index.d.ts",
+  "bin": {
+    "cloud-observer": "bin/cloud-observer.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc -w",
+    "cdk": "cdk"
+  },
+  "devDependencies": {
+    "@types/node": "^8.9.4",
+    "typescript": "^3.1.2",
+    "aws-cdk": "^0.18.1"
+  },
+  "dependencies": {
+    "@aws-cdk/aws-iam": "^0.18.1",
+    "@aws-cdk/aws-lambda-event-sources": "^0.18.1",
+    "@aws-cdk/aws-sns": "^0.18.1",
+    "@aws-cdk/aws-sqs": "^0.18.1",
+    "@aws-cdk/cdk": "^0.18.1",
+    "aws-lambda": "^0.1.2"
+  },
+  "description": "AWS-CDK based solution for passing various AWS CloudWatch Events to your email or Slack channel.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RafalWilinski/cloud-observer.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/RafalWilinski/cloud-observer/issues"
+  },
+  "homepage": "https://github.com/RafalWilinski/cloud-observer#readme"
 }

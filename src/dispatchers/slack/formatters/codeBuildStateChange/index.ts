@@ -9,18 +9,19 @@ const computeColor = (buildStatus: string) => {
   }
 };
 
-const getLogs = (data: any) => {
+const getLogs = async (data: any) => {
   const cloudwatchlogs = new CloudWatchLogs();
   const params = {
     logGroupName: data.detail['additional-information'].logs['group-name'],
     logStreamName: data.detail['additional-information'].logs['stream-name'],
   };
+  const logs = await cloudwatchlogs.getLogEvents(params).promise();
 
-  return `\n\`\`\`\n${cloudwatchlogs.getLogEvents(params).promise()}\n\`\`\``;
+  return `\n\`\`\`\n${logs}\n\`\`\``;
 };
 
 export const codeBuildStateChange = async (data: any) => ({
-  description: `Project ${data.detail['project-name']} *${
+  text: `Project ${data.detail['project-name']} *${
     data.detail['build-status']
   }*.${await getLogs(data)}`,
   fields: [

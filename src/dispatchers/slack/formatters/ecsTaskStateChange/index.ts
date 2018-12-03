@@ -11,21 +11,24 @@ const computeColor = (lastStatus: string) => {
   }
 };
 
-const getLogs = (data: any) => {
+const getLogs = async (data: any) => {
   console.log(data);
   const cloudwatchlogs = new CloudWatchLogs();
   const params = {
     logGroupName: 'STRING_VALUE',
     logStreamName: 'STRING_VALUE',
   };
+  const logs = await cloudwatchlogs.getLogEvents(params).promise();
 
-  return `\n\`\`\`\n${cloudwatchlogs.getLogEvents(params).promise()}\n\`\`\``;
+  return `\n\`\`\`\n${logs}\n\`\`\``;
 };
 
 export const ecsTaskStateChange = async (data: any) => ({
-  description: `${data.detail.taskArn} transitioning from *${
-    data.detail.lastStatus
-  }* to *${data.detail.desiredStatus}* status.${await getLogs(data)}`,
+  text: `Task ${
+    data.detail.taskDefinitionArn.split('/')[1]
+  } transitioning from *${data.detail.lastStatus}* to *${
+    data.detail.desiredStatus
+  }* status.${await getLogs(data)}`,
   fields: [
     {
       title: 'Cluster',

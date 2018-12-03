@@ -20,12 +20,15 @@ export const formatSlackMessage = ({
   });
 
 export const prepareNotificationData = async (
-  data: any,
+  payload: any,
 ): Promise<NotificationData> => {
+  const data = JSON.parse(payload.Records[0].Sns.Message);
   const sharedNotificationData: NotificationData = {
     text: String(data['detail-type']),
     color: '#DD0000',
   };
+
+  console.log(data);
 
   switch (data['detail-type']) {
     case 'ECS Task State Change':

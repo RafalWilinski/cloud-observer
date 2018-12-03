@@ -1,4 +1,3 @@
-// import { CloudWatchLogsHandler } from 'aws-lambda';
 import * as got from 'got';
 import NotificationData from './NotificationData';
 import { formatSlackMessage, prepareNotificationData } from './utils';
@@ -9,6 +8,8 @@ export const handler = async (data: any) => {
   }
 
   let notificationData: NotificationData = await prepareNotificationData(data);
+
+  console.log(notificationData);
 
   await got.post(process.env.WEBHOOK_URL, {
     body: formatSlackMessage(notificationData),

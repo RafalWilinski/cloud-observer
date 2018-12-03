@@ -8,9 +8,9 @@ const computeColor = (deployStatus: string) => {
 };
 
 export const codeDeployDeploymentStateChange = (data: any) => ({
-  description: `Project ${
-    data.detail.application
-  } deployment changed state to *${data.detail.detail.state}*`,
+  text: `Project ${data.detail.application} deployment changed state to *${
+    data.detail.detail.state
+  }*`,
   fields: [
     {
       title: 'Deployment ID',

@@ -91,9 +91,14 @@ class CloudObserverStackCore extends cdk.Stack {
     role.addToPolicy(
       new iam.PolicyStatement()
         .addAllResources()
-        .addAction('logs:GetLogEvents')
-        .addAction('logs:DescribeLogStreams')
-        .addAction('logs:DescribeLogGroups'),
+        .addActions(
+          'logs:DescribeLogGroups',
+          'logs:CreateLogStream',
+          'logs:CreateLogGroup',
+          'logs:PutLogEvents',
+          'logs:DescribeLogStreams',
+          'logs:GetLogEvents',
+        ),
     );
 
     return new lambda.Function(this, destination.type, {
