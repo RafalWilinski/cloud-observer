@@ -20,9 +20,10 @@ const getLogs = async (data: any) => {
   };
   const logs = await cloudwatchlogs.getLogEvents(params).promise();
 
-  return `\n\`\`\`\n${(logs.events || []).map(
-    e => `${e.timestamp} - ${e.message}`,
-  )}\n\`\`\``;
+  return `\n\`\`\`\n${(logs.events || [])
+    .map(e => `${e.timestamp} - ${e.message}`)
+    .slice(-20)
+    .join('\n')}\n\`\`\``;
 };
 
 export const ecsTaskStateChange = async (data: any) => ({
