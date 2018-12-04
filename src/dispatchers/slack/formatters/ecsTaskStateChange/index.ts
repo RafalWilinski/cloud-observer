@@ -22,8 +22,8 @@ const getLogs = async (data: any) => {
 
   return `\n\`\`\`\n${(logs.events || [])
     .map(e => `${e.timestamp} - ${e.message}`)
-    .slice(-20)
-    .join('\n')}\n\`\`\``;
+    .slice(-30)
+    .join('')}\n\`\`\``;
 };
 
 export const ecsTaskStateChange = async (data: any) => ({
