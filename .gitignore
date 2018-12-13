@@ -2,3 +2,4 @@
 *.d.ts
 node_modules
 config.json
+assets/.DS_Store

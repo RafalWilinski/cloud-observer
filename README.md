@@ -2,7 +2,7 @@
 
 AWS-CDK based solution for passing various AWS CloudWatch Events to your email or Slack channel.
 
-![Demo](assets/slack.png?raw=true "Demo")
+![Schema](assets/schema.png?raw=true "Schema")
 
 ### Useful commands
 
@@ -36,13 +36,20 @@ Each entry inside main array translates to separate SNS topic subscribed to even
 ]
 ```
 
+Following configuration will pass all the ECS task state events to the slack channel specified inside `destinations.endpoint` field.
+
 As this software is in heavy development stage, configuration structure is very likely to change.
 
 ### Events to be handled
 - [x] ECS Task State Change
+- [x] CodeDeploy Deployment State Change
+- [x] CodeBuild State Change
+- [ ] Autoscaling Group state change
+- [ ] Workspaces State Change
 - [ ] ECS Container Instance State Change
+- [ ] EC2 Instance State Change
 
 
 ### Functionality
 - [ ] Filtering sources by ARN, region, etc.
-- [ ] More friendly config file. YAML? TS?
+- [ ] More friendly config file. YAML or TS file
