@@ -7,12 +7,14 @@ import events = require('@aws-cdk/aws-events');
 import lambda = require('@aws-cdk/aws-lambda');
 import { Topic } from '@aws-cdk/aws-sns';
 import { Code, Runtime } from '@aws-cdk/aws-lambda';
+import { SnsTopic } from '@aws-cdk/aws-events-targets';
 import { SnsEventSource } from '@aws-cdk/aws-lambda-event-sources';
 
 enum SourceType {
   ECSTaskStateChange = 'ECS Task State Change',
   CodeBuildStateChange = 'CodeBuild Build State Change',
   CodeDeployDeploymentStateChangeNotification = 'CodeDeploy Deployment State-change Notification',
+  ECSContainerInstanceStateChange = 'ECS Container Instance State Change',
 }
 
 interface Source {
@@ -46,7 +48,16 @@ class CloudObserverStackCore extends cdk.Stack {
   processSource = (source: Source) => {
     switch (source.type) {
       case SourceType.ECSTaskStateChange:
-        return new events.EventRule(this, 'ecs-task-state-change', {
+        return new events.Rule(this, 'ecs-container-instance-state-change', {
+          description: 'Runs on ECS Container instance state change',
+          ruleName: 'ecs-container-instance-state-change',
+          eventPattern: {
+            source: ['aws.ecs'],
+            detailType: [source.type],
+          },
+        });
+      case SourceType.ECSTaskStateChange:
+        return new events.Rule(this, 'ecs-task-state-change', {
           description: 'Runs on ECS Task state change',
           ruleName: 'ecs-task-state-change',
           eventPattern: {
@@ -55,7 +66,7 @@ class CloudObserverStackCore extends cdk.Stack {
           },
         });
       case SourceType.CodeBuildStateChange:
-        return new events.EventRule(this, 'codebuild-task-state-change', {
+        return new events.Rule(this, 'codebuild-task-state-change', {
           description: 'Runs on CodeBuild Task State Change',
           ruleName: 'codebuild-state-change',
           eventPattern: {
@@ -64,29 +75,22 @@ class CloudObserverStackCore extends cdk.Stack {
           },
         });
       case SourceType.CodeDeployDeploymentStateChangeNotification:
-        return new events.EventRule(
-          this,
-          'codedeploy-deployment-state-change',
-          {
-            description: 'Runs on CodeDeploy Deployment State Change',
-            ruleName: 'codedeploy-deployment-state-change',
-            eventPattern: {
-              source: ['aws.codebuild'],
-              detailType: [source.type],
-            },
+        return new events.Rule(this, 'codedeploy-deployment-state-change', {
+          description: 'Runs on CodeDeploy Deployment State Change',
+          ruleName: 'codedeploy-deployment-state-change',
+          eventPattern: {
+            source: ['aws.codebuild'],
+            detailType: [source.type],
           },
-        );
+        });
     }
+    return;
   };
 
   processDestination = (destination: Destination) => {
-    const role = new iam.Role(
-      this,
-      `CloudObserver-${destination.type}-dispatcher-role`,
-      {
-        assumedBy: new iam.ServicePrincipal('lambda.amazonaws.com'),
-      },
-    );
+    const role = new iam.Role(this, `CloudObserver-${destination.type}-dispatcher-role`, {
+      assumedBy: new iam.ServicePrincipal('lambda.amazonaws.com'),
+    });
 
     role.addToPolicy(
       new iam.PolicyStatement()
@@ -102,12 +106,8 @@ class CloudObserverStackCore extends cdk.Stack {
     );
 
     return new lambda.Function(this, destination.type, {
-      code: Code.asset(
-        path.join(__dirname, '..', 'dispatchers', destination.type),
-      ),
-      description: `CloudObserver Lambda function dispatching ${
-        destination.type
-      } messages`,
+      code: Code.asset(path.join(__dirname, '..', 'dispatchers', destination.type)),
+      description: `CloudObserver Lambda function dispatching ${destination.type} messages`,
       handler: 'function.handler',
       runtime: Runtime.NodeJS810,
       environment: {
@@ -121,14 +121,10 @@ class CloudObserverStackCore extends cdk.Stack {
   processSubscription = (subscription: Subscription) => {
     const topic = new Topic(this, 'CloudObserverTopic');
     const eventRules = subscription.sources.map(this.processSource);
-    const dispatcherFunctions = subscription.destinations.map(
-      this.processDestination,
-    );
+    const dispatcherFunctions = subscription.destinations.map(this.processDestination);
 
-    eventRules.forEach(e => e.addTarget(topic));
-    dispatcherFunctions.forEach(f =>
-      f.addEventSource(new SnsEventSource(topic)),
-    );
+    eventRules.forEach(e => e!.addTarget(new SnsTopic(topic)));
+    dispatcherFunctions.forEach(f => f.addEventSource(new SnsEventSource(topic)));
   };
 }
 

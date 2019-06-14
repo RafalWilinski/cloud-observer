@@ -3,3 +3,4 @@
 node_modules
 config.json
 assets/.DS_Store
+cdk.out
