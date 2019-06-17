@@ -17,7 +17,7 @@
 
 > AWS-CDK based solution for passing various AWS CloudWatch Events to your email or Slack channel.
 
-![Demo](assets/slack.png?raw=true "Demo")
+![Demo](assets/schema.png?raw=true "Demo")
 
 ### 🏠 [Homepage](https://github.com/RafalWilinski/cloud-observer#readme)
 
@@ -98,7 +98,3 @@ Give a ⭐️ if this project helped you!
 ## 📝 License
 
 Copyright © 2019 [RafalWilinski](https://github.com/RafalWilinski).<br />
-
----
-
-# _This README was generated with ❤️ by [readme-md-generator](https://github.com/kefranabg/readme-md-generator)_
