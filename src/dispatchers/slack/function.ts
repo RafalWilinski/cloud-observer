@@ -9,8 +9,6 @@ export const handler = async (data: any) => {
 
   let notificationData: NotificationData = await prepareNotificationData(data);
 
-  console.log(notificationData);
-
   await got.post(process.env.WEBHOOK_URL, {
     body: formatSlackMessage(notificationData),
   });
