@@ -17,6 +17,8 @@
 
 > AWS-CDK based solution for passing various AWS CloudWatch Events to your email or Slack channel.
 
+![Demo](assets/slack.png?raw=true "Demo")
+
 ### 🏠 [Homepage](https://github.com/RafalWilinski/cloud-observer#readme)
 
 ## Install
@@ -57,6 +59,8 @@ Each entry inside main array translates to separate SNS topic subscribed to even
 ]
 ```
 
+Following configuration will pass all the ECS task state events to the slack channel specified inside `destinations.endpoint` field.
+
 As this software is in heavy development stage, configuration structure is very likely to change.
 
 ## Todo
@@ -64,7 +68,12 @@ As this software is in heavy development stage, configuration structure is very 
 ### Events to be handled
 
 - [x] ECS Task State Change
+- [x] CodeDeploy Deployment State Change
+- [x] CodeBuild State Change
+- [ ] Autoscaling Group state change
+- [ ] Workspaces State Change
 - [ ] ECS Container Instance State Change
+- [ ] EC2 Instance State Change
 
 ### Functionality
 
@@ -92,4 +101,4 @@ Copyright © 2019 [RafalWilinski](https://github.com/RafalWilinski).<br />
 
 ---
 
-_This README was generated with ❤️ by [readme-md-generator](https://github.com/kefranabg/readme-md-generator)_
+# _This README was generated with ❤️ by [readme-md-generator](https://github.com/kefranabg/readme-md-generator)_

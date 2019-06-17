@@ -17,15 +17,18 @@ const getLogs = async (data: any) => {
   };
   const logs = await cloudwatchlogs.getLogEvents(params).promise();
 
-  return `\n\`\`\`\n${(logs.events || []).map(
-    e => `${e.timestamp} - ${e.message}`,
-  )}\n\`\`\``;
+  return `\n\`\`\`\n${(logs.events || [])
+    .map(e => `${e.timestamp} - ${e.message}`)
+    .slice(-30)
+    .join('')}\n\`\`\``;
 };
 
 export const codeBuildStateChange = async (data: any) => ({
   text: `Project ${data.detail['project-name']} *${
     data.detail['build-status']
-  }*.${await getLogs(data)}`,
+  }*.${await getLogs(data)}\n<${
+    data.detail['additional-information'].logs['deep-link']
+  }|Full logs in CodeBuild>`,
   fields: [
     {
       title: 'Build ID',
@@ -34,12 +37,6 @@ export const codeBuildStateChange = async (data: any) => ({
     {
       title: 'Build Start Time',
       value: data.detail['additional-information']['build-start-time'],
-    },
-    {
-      title: 'Logs',
-      value: `<CodeBuild|${
-        data.detail['additional-information'].logs['deep-link']
-      }>`,
     },
     {
       title: 'Region',
